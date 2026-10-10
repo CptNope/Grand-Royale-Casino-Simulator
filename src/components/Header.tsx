@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Volume2, VolumeX, Sparkles, User, RefreshCw, EyeOff, Eye } from 'lucide-react';
+import { Volume2, VolumeX, Sparkles, User, RefreshCw, EyeOff, Eye, Database } from 'lucide-react';
 import type { Player, CasinoConfig } from '../types/casino.ts';
 import { sound } from '../services/sound.ts';
 import { PWAInstallButton } from './PWAInstallButton.tsx';
+import { APP_VERSION_INFO } from '../version.ts';
 
 interface HeaderProps {
   activeTab: string;
@@ -12,6 +13,7 @@ interface HeaderProps {
   onClaimDaily: () => void;
   onResetBalance: () => void;
   onOpenProfile: () => void;
+  onOpenCacheModal: () => void;
   isReducedMotion: boolean;
   onToggleReducedMotion: () => void;
 }
@@ -24,6 +26,7 @@ export const Header: React.FC<HeaderProps> = ({
   onClaimDaily,
   onResetBalance,
   onOpenProfile,
+  onOpenCacheModal,
   isReducedMotion,
   onToggleReducedMotion,
 }) => {
@@ -132,8 +135,18 @@ export const Header: React.FC<HeaderProps> = ({
           {/* PWA Install Button */}
           <PWAInstallButton variant="header" />
 
-          {/* Sound & Accessibility Toggles */}
+          {/* Sound, Cache & Accessibility Toggles */}
           <div className="flex items-center gap-1 border-l border-slate-800 pl-2">
+            <button
+              type="button"
+              onClick={onOpenCacheModal}
+              className="p-2 rounded-lg text-slate-400 hover:text-amber-300 hover:bg-slate-800 transition-colors cursor-pointer"
+              title={`Cache & Version Diagnostics (v${APP_VERSION_INFO.version})`}
+              aria-label="Open Cache & Version Diagnostics"
+            >
+              <Database className="w-4 h-4" />
+            </button>
+
             <button
               type="button"
               onClick={handleToggleMute}

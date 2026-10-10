@@ -282,6 +282,17 @@ app.get('/api/state', (req, res) => {
     playersList: Object.values(state.players),
     serverSeedHash: crypto.createHash('sha256').update(state.serverSeed).digest('hex'),
     nonce: state.nonce,
+    version: '2.4.0',
+  });
+});
+
+app.get('/api/version', (req, res) => {
+  res.json({
+    version: '2.4.0',
+    build: 'v2.4.0-pwa-mobile-opt',
+    schemaVersion: 4,
+    timestamp: '2026-10-10T03:10:00Z',
+    games: Object.keys(state.config.games),
   });
 });
 

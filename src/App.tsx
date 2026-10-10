@@ -38,6 +38,10 @@ import { TransferMarket } from './components/TransferMarket.tsx';
 import { AdminDashboard } from './components/AdminDashboard.tsx';
 import { RulesSection } from './components/RulesSection.tsx';
 import { OfflineIndicator } from './components/OfflineIndicator.tsx';
+import { CacheModal } from './components/CacheModal.tsx';
+import { MobileNavBar } from './components/MobileNavBar.tsx';
+import { CacheManager } from './services/cacheManager.ts';
+import { APP_VERSION_INFO } from './version.ts';
 
 // Image assets generated via generate_image
 import slotsBannerImg from './assets/images/casino_slots_banner_1791581285484.jpg';
@@ -59,6 +63,7 @@ export default function App() {
 
   // Modals & UI States
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isCacheModalOpen, setIsCacheModalOpen] = useState(false);
   const [bannerNotice, setBannerNotice] = useState<{ text: string; type: 'success' | 'info' | 'error' } | null>(null);
   const [isReducedMotion, setIsReducedMotion] = useState(false);
 
@@ -78,6 +83,16 @@ export default function App() {
 
   useEffect(() => {
     loadCasinoState();
+
+    // Check version upgrade / migrations
+    const { isUpgrade, previousVersion } = CacheManager.checkVersionUpgrade();
+    if (isUpgrade && previousVersion) {
+      setBannerNotice({
+        text: `Grand Royale updated to v${APP_VERSION_INFO.version}! All cache and rules refreshed.`,
+        type: 'info',
+      });
+      setTimeout(() => setBannerNotice(null), 6000);
+    }
   }, []);
 
   const handleClaimDailyBonus = async () => {
@@ -256,6 +271,7 @@ export default function App() {
         onClaimDaily={handleClaimDailyBonus}
         onResetBalance={handleResetBalance}
         onOpenProfile={() => setIsProfileOpen(true)}
+        onOpenCacheModal={() => setIsCacheModalOpen(true)}
         isReducedMotion={isReducedMotion}
         onToggleReducedMotion={() => setIsReducedMotion(!isReducedMotion)}
       />
@@ -475,6 +491,7 @@ export default function App() {
             players={allPlayers}
             onConfigUpdated={(newCfg) => setConfig(newCfg)}
             onRefreshState={loadCasinoState}
+            onOpenCacheModal={() => setIsCacheModalOpen(true)}
           />
         )}
       </main>
@@ -489,11 +506,26 @@ export default function App() {
         onRefreshState={loadCasinoState}
       />
 
-      {/* Global Clean Editorial Footer */}
-      <footer className="border-t border-slate-800/80 bg-[#090c10] py-6 text-xs text-slate-500">
+      {/* Version Control & Hard Cache Clearing Modal */}
+      <CacheModal
+        isOpen={isCacheModalOpen}
+        onClose={() => setIsCacheModalOpen(false)}
+      />
+
+      {/* Global Clean Editorial Footer (padding bottom for mobile bar) */}
+      <footer className="border-t border-slate-800/80 bg-[#090c10] py-6 mb-14 md:mb-0 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="font-display font-bold text-slate-400">Grand Royale Casino Simulator</span>
+            <span>·</span>
+            <button
+              type="button"
+              onClick={() => setIsCacheModalOpen(true)}
+              className="font-mono text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
+              title="Click to view release changelog & storage diagnostics"
+            >
+              v{APP_VERSION_INFO.version}
+            </button>
             <span>·</span>
             <span>Virtual Play-Money Sandbox</span>
             <span>·</span>
@@ -503,28 +535,48 @@ export default function App() {
           <div className="flex items-center gap-4">
             <button
               type="button"
+              onClick={() => setIsCacheModalOpen(true)}
+              className="text-amber-400/90 hover:text-amber-300 transition-colors cursor-pointer font-medium"
+            >
+              Cache & Version
+            </button>
+            <button
+              type="button"
               onClick={() => setActiveTab('rules')}
-              className="hover:text-slate-300 transition-colors"
+              className="hover:text-slate-300 transition-colors cursor-pointer"
             >
               Rules & Odds
             </button>
             <button
               type="button"
               onClick={() => setActiveTab('admin')}
-              className="hover:text-slate-300 transition-colors"
+              className="hover:text-slate-300 transition-colors cursor-pointer"
             >
               Admin Controls
             </button>
             <button
               type="button"
               onClick={handleResetBalance}
-              className="hover:text-slate-300 transition-colors"
+              className="hover:text-slate-300 transition-colors cursor-pointer"
             >
               Reset Practice Wallet
             </button>
           </div>
         </div>
       </footer>
+
+      {/* Thumb-Optimized Mobile Bottom Bar */}
+      <MobileNavBar
+        activeTab={activeTab}
+        onTabChange={(tab) => {
+          sound.playChip();
+          setActiveTab(tab);
+        }}
+        player={player}
+        onOpenProfile={() => setIsProfileOpen(true)}
+        onOpenCacheModal={() => setIsCacheModalOpen(true)}
+      />
+
       {/* Offline Connectivity Notification */}
       <OfflineIndicator />
     </div>

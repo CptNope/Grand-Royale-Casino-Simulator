@@ -8,6 +8,20 @@
 
 :root {
   font-family: var(--font-sans);
+  /* Touch target sizes & viewport containment */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Mobile safe area utility padding */
+.safe-pb {
+  padding-bottom: env(safe-area-inset-bottom, 1rem);
+}
+
+.safe-pt {
+  padding-top: env(safe-area-inset-top, 1rem);
 }
 
 .font-display {

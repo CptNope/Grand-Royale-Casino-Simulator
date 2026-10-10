@@ -12,6 +12,7 @@ import {
   HelpCircle,
   ShieldAlert,
   Save,
+  Database,
 } from 'lucide-react';
 import type { Player, CasinoConfig, AuditLogEntry, GameType } from '../types/casino.ts';
 import { api } from '../services/api.ts';
@@ -22,6 +23,7 @@ interface AdminDashboardProps {
   players: Player[];
   onConfigUpdated: (newConfig: CasinoConfig) => void;
   onRefreshState: () => void;
+  onOpenCacheModal?: () => void;
 }
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({
@@ -29,6 +31,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   players,
   onConfigUpdated,
   onRefreshState,
+  onOpenCacheModal,
 }) => {
   const [activeTab, setActiveTab] = useState<'games' | 'economy' | 'players' | 'audit' | 'guide'>('games');
   const [editableConfig, setEditableConfig] = useState<CasinoConfig>(JSON.parse(JSON.stringify(config)));
@@ -128,14 +131,27 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={handleResetSystem}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-rose-300 hover:text-white bg-rose-950/40 hover:bg-rose-900/60 rounded-lg border border-rose-900/60 transition-colors"
-        >
-          <RotateCcw className="w-3.5 h-3.5" />
-          <span>Factory Reset System</span>
-        </button>
+        <div className="flex items-center gap-2">
+          {onOpenCacheModal && (
+            <button
+              type="button"
+              onClick={onOpenCacheModal}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-amber-300 hover:text-white bg-amber-950/40 hover:bg-amber-900/60 rounded-lg border border-amber-800/60 transition-colors cursor-pointer"
+            >
+              <Database className="w-3.5 h-3.5 text-amber-400" />
+              <span>Hard Cache & Version Tools</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={handleResetSystem}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-rose-300 hover:text-white bg-rose-950/40 hover:bg-rose-900/60 rounded-lg border border-rose-900/60 transition-colors cursor-pointer"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Factory Reset System</span>
+          </button>
+        </div>
       </div>
 
       {saveSuccess && (

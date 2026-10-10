@@ -44,7 +44,7 @@ export const ChipSelector: React.FC<ChipSelectorProps> = ({
                 sound.playChip();
                 onSelectChip(chip.value);
               }}
-              className={`relative flex items-center justify-center w-11 h-11 rounded-full font-mono font-bold text-xs tracking-tight shadow-md border-2 transition-all duration-150 shrink-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
+              className={`relative flex items-center justify-center w-12 h-12 sm:w-11 sm:h-11 rounded-full font-mono font-bold text-xs tracking-tight shadow-md border-2 transition-all duration-150 shrink-0 cursor-pointer touch-manipulation select-none disabled:opacity-50 disabled:cursor-not-allowed ${
                 chip.color
               } ${
                 isSelected
