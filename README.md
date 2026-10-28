@@ -432,3 +432,7 @@ When hosted statically without a Node backend, `ApiService` automatically detect
 ## 📄 License
 
 This project is licensed under the **MIT License** — feel free to explore, learn from, and adapt the codebase for educational and personal projects.
+
+---
+
+Built by [Jeremy Anderson Tech](https://jeremyanderson.tech/), a web development and security practice in Shrewsbury, MA. Read more on the [project page](https://jeremyanderson.tech/project/grand-royale-casino-simulator/). [Services](https://jeremyanderson.tech/services/)
